@@ -38,8 +38,14 @@ Une notification n'est envoyée que si le **niveau change** — pas de spam si l
 ```
 jeedom-canicule/
 ├── README.md
+├── assets/
+│   └── img/
+│       ├── Sun0.png      ← Niveau 0 — pas de canicule
+│       ├── sun033.png    ← Niveau 1 — vigilance
+│       ├── sun066.png    ← Niveau 2 — alerte
+│       └── sun100.png    ← Niveau 3 — canicule confirmée
 └── scenario/
-    └── canicule.php    ← Bloc code PHP à coller dans Jeedom
+    └── canicule.php      ← Bloc code PHP à coller dans Jeedom
 ```
 
 ---
@@ -75,10 +81,7 @@ Deux valeurs à adapter dans le code :
 
 ```php
 // ID de la commande température extérieure
-$debut    = date('Y-m-d') . ' 00:00:00';
-$fin      = date('Y-m-d') . ' 23:59:59';
-$temp_max = scenarioExpression::maxBetween(XXXX, $debut, $fin); // ← ID température
-$temp_min = scenarioExpression::minBetween(XXXX, $debut, $fin); // ← ID température
+$q->bindValue(':cmd_id', XXXX, PDO::PARAM_INT); // ← ID température
 
 // ID de la commande Bot Telegram
 cmd::byId(YYYY)->execCmd([...]); // ← ID Bot Telegram
@@ -110,37 +113,18 @@ Ces variables peuvent être utilisées dans un widget Jeedom pour afficher le ni
 
 ---
 
-## 🌡️ Widget dashboard
-
-La variable `canicule` alimente directement le widget Jeedom :
-
-| Valeur | Affichage |
-|---|---|
-| 0 | Pas de canicule |
-| 1 | ⚠️ Vigilance |
-| 2 | 🟠 Alerte niveau 2 |
-| 3 | 🔴 Canicule confirmée |
-
----
-
-## 📝 Changelog
-
-| Date | Version | Changements |
-|---|---|---|
-| Mai 2026 | v1.0 | Création du scénario en PHP |
-
----
-
-## 🔗 Liens
-
-- ☀️ [Repo Solar Dashboard](https://github.com/Alweddle/solar-dashboard)
-- 💻 [CV interactif](https://alweddle.github.io)
-
----
-
 ## 🎨 Widget dashboard
 
 Le widget utilise le template Jeedom **`tmplmultistate`** — il affiche une image de soleil différente selon le niveau de canicule.
+
+### Aperçu
+
+| Niveau | Image | Description |
+|---|---|---|
+| 0 | ![Sun0](assets/img/Sun0.png) | Pas de canicule |
+| 1 | ![sun033](assets/img/sun033.png) | Vigilance |
+| 2 | ![sun066](assets/img/sun066.png) | Alerte niveau 2 |
+| 3 | ![sun100](assets/img/sun100.png) | Canicule confirmée |
 
 ### Configuration du widget
 
@@ -175,20 +159,27 @@ Le widget utilise le template Jeedom **`tmplmultistate`** — il affiche une ima
 }
 ```
 
-### Images utilisées
+### ⚠️ Important — Emplacement des images
 
-| Niveau | Fichier | Description |
-|---|---|---|
-| 0 | `Sun0.png` | Soleil normal — pas de canicule |
-| 1 | `sun033.png` | Soleil chaud — vigilance |
-| 2 | `sun066.png` | Soleil très chaud — alerte |
-| 3 | `sun100.png` | Soleil en feu — canicule confirmée |
+Les images du repo `assets/img/` sont fournies **à titre de documentation uniquement**.
 
-Les images sont à déposer dans le dossier Jeedom :
+Pour que le widget fonctionne dans Jeedom, les images doivent être copiées sur le Raspberry Pi dans :
+
 ```
 /var/www/html/data/img/Maison/Exterieur/
 ```
 
-### Commande associée
+---
 
-Le widget est lié à la commande virtuelle qui expose la variable `canicule` (valeur 0, 1, 2 ou 3).
+## 📝 Changelog
+
+| Date | Version | Changements |
+|---|---|---|
+| Mai 2026 | v1.0 | Création du scénario en PHP + widget |
+
+---
+
+## 🔗 Liens
+
+- ☀️ [Repo Solar Dashboard](https://github.com/Alweddle/solar-dashboard)
+- 💻 [CV interactif](https://alweddle.github.io)
