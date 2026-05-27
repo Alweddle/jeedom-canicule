@@ -135,3 +135,60 @@ La variable `canicule` alimente directement le widget Jeedom :
 
 - ☀️ [Repo Solar Dashboard](https://github.com/Alweddle/solar-dashboard)
 - 💻 [CV interactif](https://alweddle.github.io)
+
+---
+
+## 🎨 Widget dashboard
+
+Le widget utilise le template Jeedom **`tmplmultistate`** — il affiche une image de soleil différente selon le niveau de canicule.
+
+### Configuration du widget
+
+```json
+{
+  "name": "Canicule",
+  "type": "info",
+  "subtype": "numeric",
+  "template": "tmplmultistate",
+  "test": [
+    {
+      "operation": "#value#==0",
+      "state_light": "<img class='img-responsive' src='data/img/Maison/Exterieur/Sun0.png'>",
+      "state_dark":  "<img class='img-responsive' src='data/img/Maison/Exterieur/Sun0.png'>"
+    },
+    {
+      "operation": "#value#==1",
+      "state_light": "<img class='img-responsive' src='data/img/Maison/Exterieur/sun033.png'>",
+      "state_dark":  "<img class='img-responsive' src='data/img/Maison/Exterieur/sun033.png'>"
+    },
+    {
+      "operation": "#value#==2",
+      "state_light": "<img class='img-responsive' src='data/img/Maison/Exterieur/sun066.png'>",
+      "state_dark":  "<img class='img-responsive' src='data/img/Maison/Exterieur/sun066.png'>"
+    },
+    {
+      "operation": "#value#==3",
+      "state_light": "<img class='img-responsive' src='data/img/Maison/Exterieur/sun100.png'>",
+      "state_dark":  "<img class='img-responsive' src='data/img/Maison/Exterieur/sun100.png'>"
+    }
+  ]
+}
+```
+
+### Images utilisées
+
+| Niveau | Fichier | Description |
+|---|---|---|
+| 0 | `Sun0.png` | Soleil normal — pas de canicule |
+| 1 | `sun033.png` | Soleil chaud — vigilance |
+| 2 | `sun066.png` | Soleil très chaud — alerte |
+| 3 | `sun100.png` | Soleil en feu — canicule confirmée |
+
+Les images sont à déposer dans le dossier Jeedom :
+```
+/var/www/html/data/img/Maison/Exterieur/
+```
+
+### Commande associée
+
+Le widget est lié à la commande virtuelle qui expose la variable `canicule` (valeur 0, 1, 2 ou 3).
